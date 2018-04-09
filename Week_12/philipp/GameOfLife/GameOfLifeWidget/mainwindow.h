@@ -37,7 +37,8 @@ private:
     QLabel *mRamWidget;
 
     QActionGroup *ramActionGroup;
-    int mCurrentActionIndex;
+    QActionGroup *colorActionGroup;
+    int mCurrentRamActionIndex;
 };
 
 #endif // MAINWINDOW_H

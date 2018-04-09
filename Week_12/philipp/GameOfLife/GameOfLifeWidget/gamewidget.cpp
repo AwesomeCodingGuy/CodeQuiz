@@ -9,11 +9,18 @@
 // Game Of Life
 #include "simplegameoflife.h"
 
+static QVector<QRgb> colorTables[3] = {
+    { qRgb(255, 255, 255), qRgb(0, 0, 0) },
+    { qRgb(0, 0, 255), qRgb(255, 128, 0) },
+    { qRgb(0, 255, 0), qRgb(255, 0, 0) }
+};
+
 GameWidget::GameWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::GameWidget)
     , mGame(nullptr)
     , mCurrentEvolution(0)
+    , mCurrentColorActionIndex(0)
 {
     ui->setupUi(this);
 
@@ -32,7 +39,7 @@ GameWidget::~GameWidget()
         delete mGame;
 }
 
-void GameWidget::createNewGame(int height, int width, int gameType)
+void GameWidget::createNewGame(int height, int width, int gameType, bool fill)
 {
     if(mGame) {
         if(QMessageBox::No == QMessageBox::question(this,
@@ -44,8 +51,13 @@ void GameWidget::createNewGame(int height, int width, int gameType)
         }
     }
 
+    if(mAutoEvolutionTimer->isActive())
+        on_autoEvolveButton_clicked();
+
     if(gameType == 0) {
         mGame = new SimpleGameOfLife(height, width);
+        if(fill)
+            mGame->randomFill(ui->fillSpin->value());
         setCurrentEvolution(mGame->getEvolution());
         setImageData();
 
@@ -69,7 +81,7 @@ void GameWidget::setImageData()
                         mGame->getHeight(),
                         mGame->getWidth(),
                         QImage::Format_Indexed8);
-    img.setColorTable({qRgb(255, 255, 255), qRgb(0, 0, 0)});
+    img.setColorTable(colorTables[mCurrentColorActionIndex]);
     ui->gameMap->setPixmap(QPixmap::fromImage(img).scaled(qMax(ui->gameMap->width(), mGame->getWidth()),
                                                           qMax(ui->gameMap->height(), mGame->getHeight()),
                                                           Qt::KeepAspectRatio,
@@ -85,6 +97,7 @@ void GameWidget::on_nextEvolutionButton_clicked()
 
 void GameWidget::on_autoEvolveButton_clicked()
 {
+    qDebug() << "Auto";
     bool enabled = mAutoEvolutionTimer->isActive();
     if(enabled) {
         ui->autoEvolveButton->setText("Run");
@@ -123,4 +136,9 @@ void GameWidget::on_coordinateClicked(QPointF point)
 
     mGame->swap(int(y), int(x));
     setImageData();
+}
+
+void GameWidget::onColorActionGroup_triggered(QAction *action)
+{
+    mCurrentColorActionIndex = action->data().toInt();
 }

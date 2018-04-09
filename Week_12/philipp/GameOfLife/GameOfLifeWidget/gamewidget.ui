@@ -152,6 +152,9 @@
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
             <widget class="GameMap" name="gameMap">
+             <property name="styleSheet">
+              <string notr="true">background: #444;</string>
+             </property>
              <property name="frameShape">
               <enum>QFrame::NoFrame</enum>
              </property>

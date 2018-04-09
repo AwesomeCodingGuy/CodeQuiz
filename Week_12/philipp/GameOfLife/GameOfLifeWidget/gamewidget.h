@@ -19,7 +19,7 @@ public:
     explicit GameWidget(QWidget *parent = 0);
     ~GameWidget();
 
-    void createNewGame(int height, int width, int gameType);
+    void createNewGame(int height, int width, int gameType, bool fill);
 
 private:
     void setCurrentEvolution(int evolution);
@@ -32,9 +32,11 @@ public slots:
     void on_randomFillButton_clicked();
     void on_evolutionIntervalSpin_valueChanged(double d);
     void on_coordinateClicked(QPointF point);
+    void onColorActionGroup_triggered(QAction* action);
 
 private:
     Ui::GameWidget *ui;
+    int mCurrentColorActionIndex;
 
     GameOfLifeBase *mGame;
     int mCurrentEvolution;

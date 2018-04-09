@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     , mCpuTimer(nullptr)
     , mCpuWidget(new QLabel("", this))
     , mRamWidget(new QLabel("", this))
-    , mCurrentActionIndex(1)
+    , mCurrentRamActionIndex(1)
 {
     ui->setupUi(this);
     initActions();
@@ -37,8 +37,8 @@ MainWindow::MainWindow(QWidget *parent)
                                                  .arg(qRound(getCurrentProcessCpuValue())));});
         connect(mCpuTimer, &QTimer::timeout,
                 this, [=](){ mRamWidget->setText(QString(" RAM: %0 %1 ")
-                                                 .arg(QLocale("de").toString(getCurrentProcessRamValue() / ramDataPair[mCurrentActionIndex].second))
-                                                 .arg(ramDataPair[mCurrentActionIndex].first));});
+                                                 .arg(QLocale("de").toString(getCurrentProcessRamValue() / ramDataPair[mCurrentRamActionIndex].second))
+                                                 .arg(ramDataPair[mCurrentRamActionIndex].first));});
         mCpuTimer->start();
         statusBar()->show();
     } else {
@@ -55,12 +55,13 @@ void MainWindow::on_createGameButton_clicked()
 {
     ui->gameWidget->createNewGame(ui->heightSpin->value(),
                                   ui->widthSpin->value(),
-                                  ui->gameTypeCombo->currentIndex());
+                                  ui->gameTypeCombo->currentIndex(),
+                                  ui->fillCheck->isChecked());
 }
 
 void MainWindow::onRamActionGroup_triggered(QAction *action)
 {
-    mCurrentActionIndex = action->data().toInt();
+    mCurrentRamActionIndex = action->data().toInt();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -74,6 +75,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::initActions()
 {
+    // Ram
     ramActionGroup = new QActionGroup(this);
     ui->ramByteAction->setData(0);
     ramActionGroup->addAction(ui->ramByteAction);
@@ -84,4 +86,16 @@ void MainWindow::initActions()
 
     connect(ramActionGroup, SIGNAL(triggered(QAction*)),
             this, SLOT(onRamActionGroup_triggered(QAction*)));
+
+    // Color
+    ui->menuView->insertSeparator(ui->colorBlackWhiteAction)->setText("Color");
+    colorActionGroup = new QActionGroup(this);
+    ui->colorBlackWhiteAction->setData(0);
+    colorActionGroup->addAction(ui->colorBlackWhiteAction);
+    ui->colorBlueOrangeAction->setData(1);
+    colorActionGroup->addAction(ui->colorBlueOrangeAction);
+    ui->colorGreenRedAction->setData(2);
+    colorActionGroup->addAction(ui->colorGreenRedAction);
+    connect(colorActionGroup, SIGNAL(triggered(QAction*)),
+            ui->gameWidget, SLOT(onColorActionGroup_triggered(QAction*)));
 }

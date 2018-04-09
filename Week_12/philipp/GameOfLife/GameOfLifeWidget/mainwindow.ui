@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Game of Life Widget</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
@@ -79,6 +82,13 @@
          </widget>
         </item>
         <item>
+         <widget class="QCheckBox" name="fillCheck">
+          <property name="text">
+           <string>Fill</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="createGameButton">
           <property name="text">
            <string>Create</string>
@@ -126,9 +136,24 @@
     <property name="title">
      <string>View</string>
     </property>
-    <addaction name="ramByteAction"/>
-    <addaction name="ramKiloByteAction"/>
-    <addaction name="ramMegaByteAction"/>
+    <widget class="QMenu" name="menuColors">
+     <property name="title">
+      <string>Colors</string>
+     </property>
+     <addaction name="colorBlackWhiteAction"/>
+     <addaction name="colorBlueOrangeAction"/>
+     <addaction name="colorGreenRedAction"/>
+    </widget>
+    <widget class="QMenu" name="menuRAM">
+     <property name="title">
+      <string>RAM</string>
+     </property>
+     <addaction name="ramByteAction"/>
+     <addaction name="ramKiloByteAction"/>
+     <addaction name="ramMegaByteAction"/>
+    </widget>
+    <addaction name="menuColors"/>
+    <addaction name="menuRAM"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -164,6 +189,33 @@
    </property>
    <property name="text">
     <string>MB</string>
+   </property>
+  </action>
+  <action name="colorBlackWhiteAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Black / White</string>
+   </property>
+  </action>
+  <action name="colorBlueOrangeAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Blue / Orange</string>
+   </property>
+  </action>
+  <action name="colorGreenRedAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Green / Red</string>
    </property>
   </action>
  </widget>
